@@ -26,7 +26,7 @@ string GPUImageGrayscaleFilter::GRAYSCALE_FRAGMENT_SHADER = ""
 GPUImageGrayscaleFilter::GPUImageGrayscaleFilter():
     GPUImageFilter(NO_FILTER_VERTEX_SHADER, GRAYSCALE_FRAGMENT_SHADER)
 {
-
+    //
 }
 GPUImageGrayscaleFilter::~GPUImageGrayscaleFilter()
 {
