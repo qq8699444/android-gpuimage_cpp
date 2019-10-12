@@ -30,5 +30,5 @@ GPUImageGrayscaleFilter::GPUImageGrayscaleFilter():
 }
 GPUImageGrayscaleFilter::~GPUImageGrayscaleFilter()
 {
-
+	//
 }
