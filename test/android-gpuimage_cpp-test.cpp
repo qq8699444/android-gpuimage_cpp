@@ -43,9 +43,12 @@ using namespace std;
 #include "esUtil.h"
 
 #include "textureUtil.h"
+#include "ShaderUtil.h"
 
 #include "GPUImageFilter.h"
 #include "GPUImageGrayscaleFilter.h"
+#include "GPUImageOpacityFilter.h"
+#include "GPUImage3x3ConvolutionFilter.h"
 
 const int WIDTH = 640;
 const int HEIGHT = 480 ;
@@ -64,6 +67,12 @@ static const float textureCoords[] = {
             1.0f, 0.0f,
 };
 
+static float mykernel[] = {
+            -0.25f,-0.5f,-0.25f,
+            0.0f,0.0f,0.0f,
+            0.25f,0.5f,0.25f
+};
+
 class Scene
 {
 public:
@@ -73,14 +82,24 @@ public:
     void update();
     void draw();
 private:
-    std::shared_ptr<GPUImageFilter> filter;
+    std::shared_ptr<GPUImage3x3ConvolutionFilter> filter;
     int textureId;
 } ;
 
 Scene::Scene()
 {
     textureId = TextureUtil::load("wall.png");
-    filter = std::make_shared<GPUImageGrayscaleFilter>();
+    {
+        //filter = std::make_shared<GPUImageOpacityFilter>(0.5f);    
+    }
+
+    {
+        
+
+        auto f = std::make_shared<GPUImage3x3ConvolutionFilter>(mykernel);
+        
+        filter = f;
+    }
 }
 
 Scene::~Scene()
@@ -95,22 +114,27 @@ void Scene::init()
     //onSurfaceCreated
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
-
     filter->ifNeedInit();
+    filter->setTexelWidth(1.0f / 512);
+    filter->setTexelHeight(1.0f / 512);
 
-
+    ShaderUtil::checkGlError("init --1");
     //打开深度检测
     glDisable(GL_DEPTH_TEST);
+    //glEnable(GL_ALPHA);
+    ShaderUtil::checkGlError("init --2");
 
     //onSurfaceChanged
     //设置视口的大小及位置 
     glViewport(0, 0, WIDTH, HEIGHT);
     glUseProgram(filter->getProgram());
     filter->onOutputSizeChanged(WIDTH, HEIGHT);
+    ShaderUtil::checkGlError("init --3");
 }
 
 void Scene::draw()
 {
+    ShaderUtil::checkGlError("draw ++");
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
     filter->onDraw(textureId, cubes, textureCoords);

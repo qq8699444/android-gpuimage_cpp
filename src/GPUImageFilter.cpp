@@ -55,9 +55,16 @@ void GPUImageFilter::init() {
 void GPUImageFilter::onInit()
 {
     glProgId = ShaderUtil::createProgram(vertexShader, fragmentShader);
+
     glAttribPosition = glGetAttribLocation(glProgId, "position");
+    ShaderUtil::checkGlError("glGetAttribLocation postion");
+
     glUniformTexture = glGetUniformLocation(glProgId, "inputImageTexture");
+    ShaderUtil::checkGlError("glGetUniformLocation inputImageTexture");
+
     glAttribTextureCoordinate = glGetAttribLocation(glProgId, "inputTextureCoordinate");
+    ShaderUtil::checkGlError("glGetAttribLocation inputTextureCoordinate");
+
     bInitialized = true;
 }
 
@@ -91,6 +98,8 @@ void GPUImageFilter::onOutputSizeChanged(int width, int height)
 void GPUImageFilter::onDraw(int textureId, const GLfloat* cubeBuffer, const GLfloat* textureBuffer)
 {
     glUseProgram(glProgId);
+    ShaderUtil::checkGlError("glUseProgram");
+
     runPendingOnDrawTasks();
     if (!bInitialized) {
         return;
@@ -98,8 +107,9 @@ void GPUImageFilter::onDraw(int textureId, const GLfloat* cubeBuffer, const GLfl
 
     //cubeBuffer.position(0);
     glVertexAttribPointer(glAttribPosition, 2, GL_FLOAT, false, 0, cubeBuffer);
+    ShaderUtil::checkGlError("glVertexAttribPointer postion");
     glEnableVertexAttribArray(glAttribPosition);
-    ShaderUtil::checkGlError("postion");
+    ShaderUtil::checkGlError("glEnableVertexAttribArray postion");
 
     //textureBuffer.position(0);
     glVertexAttribPointer(glAttribTextureCoordinate, 2, GL_FLOAT, false, 0, textureBuffer);
@@ -135,5 +145,104 @@ void GPUImageFilter::runPendingOnDrawTasks()
     //        runOnDraw.removeFirst().run();
     //    }
     //}
+    {
+        std::lock_guard<std::mutex> l(runOnDrawLock);
+        while (!runOnDraw.empty())
+        {
+            auto it = runOnDraw.begin();
+            IRunnable* r = *it;
+            runOnDraw.pop_front();
+            r->run();
+            delete r;
+        }
+    }
 }
 
+void GPUImageFilter::setInteger(int location, int intValue)
+{
+    IRunnable* r = new Runnable1i(location, intValue);
+    {
+        std::lock_guard<std::mutex> l(runOnDrawLock);
+        runOnDraw.push_back(r);
+    }
+}
+
+void GPUImageFilter::setFloat(int location, float floatValue)
+{
+    IRunnable* r = new Runnable1f(location, floatValue);
+    {
+        std::lock_guard<std::mutex> l(runOnDrawLock);
+        runOnDraw.push_back(r);
+    }
+}
+
+
+void GPUImageFilter::setFloatVec2(int location, float* arrayValue)
+{
+    IRunnable* r = new Runnable2fv(location, arrayValue);
+    {
+        std::lock_guard<std::mutex> l(runOnDrawLock);
+        runOnDraw.push_back(r);
+    }
+}
+
+void GPUImageFilter::setFloatVec3(int location, float* arrayValue)
+{
+    IRunnable* r = new Runnable3fv(location, arrayValue);
+    {
+        std::lock_guard<std::mutex> l(runOnDrawLock);
+        runOnDraw.push_back(r);
+    }
+}
+
+void GPUImageFilter::setFloatVec4(int location, float* arrayValue)
+{
+    IRunnable* r = new Runnable4fv(location, arrayValue);
+    {
+        std::lock_guard<std::mutex> l(runOnDrawLock);
+        runOnDraw.push_back(r);
+    }
+}
+
+void GPUImageFilter::setFloatArray(int location, float* arrayValue, int len)
+{
+    IRunnable* r = new RunnableXfv(location, arrayValue, len);
+    {
+        std::lock_guard<std::mutex> l(runOnDrawLock);
+        runOnDraw.push_back(r);
+    }
+}
+
+void GPUImageFilter::setPoint(int location, float x, float y)
+{
+    IRunnable* r = new RunnablePt(location, x, y);
+    {
+        std::lock_guard<std::mutex> l(runOnDrawLock);
+        runOnDraw.push_back(r);
+    }
+}
+
+void GPUImageFilter::setUniformMatrix3f(int location, float* matrix)
+{
+    IRunnable* r = new RunnableMatrix3f(location, matrix);
+    {
+        std::lock_guard<std::mutex> l(runOnDrawLock);
+        runOnDraw.push_back(r);
+    }
+}
+
+void GPUImageFilter::setUniformMatrix4f(int location, float* matrix)
+{
+    IRunnable* r = new RunnableMatrix4f(location, matrix);
+    {
+        std::lock_guard<std::mutex> l(runOnDrawLock);
+        runOnDraw.push_back(r);
+    }
+}
+
+
+void GPUImageFilter::appendRunOnDraw(IRunnable* r)
+{
+    std::lock_guard<std::mutex> l(runOnDrawLock);
+    runOnDraw.push_back(r);
+}

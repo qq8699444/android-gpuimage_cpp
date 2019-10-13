@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <list>
+#include <mutex>
 
 #ifdef __APPLE__
 #include <OpenGLES/ES3/gl.h>
@@ -12,6 +13,8 @@
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 #endif
+
+#include "Runnable.h"
 
 class GPUImageFilter
 {
@@ -22,8 +25,8 @@ public:
     void init();
     void ifNeedInit();
     void destroy();
-    void onOutputSizeChanged(int width, int height);
-    void onDraw(int textureId, const GLfloat* cubeBuffer, const GLfloat* textureBuffer);
+    virtual void onOutputSizeChanged(int width, int height);
+    virtual void onDraw(int textureId, const GLfloat* cubeBuffer, const GLfloat* textureBuffer);
 
     bool isInitialized() {
         return bInitialized;
@@ -64,8 +67,21 @@ protected:
     virtual void onDestroy();
     virtual void onDrawArraysPre();
     void runPendingOnDrawTasks();
+
+    void setInteger(int location, int intValue);
+    void setFloat(int location, float floatValue);
+    void setFloatVec2(int location, float* arrayValue);
+    void setFloatVec3(int location, float* arrayValue);
+    void setFloatVec4(int location, float* arrayValue);
+    void setFloatArray(int location, float* arrayValue, int len);
+    void setPoint(int location, float x, float y);
+    void setUniformMatrix3f(int location, float* matrix);
+    void setUniformMatrix4f(int location, float* matrix);
+    void appendRunOnDraw(IRunnable* r);
 private:
-    //private final LinkedList<Runnable> runOnDraw;
+    std::mutex  runOnDrawLock;
+    std::list<IRunnable*> runOnDraw;
+
     string vertexShader;
     string fragmentShader;
     int glProgId;
