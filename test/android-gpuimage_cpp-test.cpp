@@ -50,9 +50,8 @@ using namespace std;
 #include "GPUImageOpacityFilter.h"
 #include "GPUImage3x3ConvolutionFilter.h"
 #include "GPUImageBrightnessFilter.h"
+#include "GPUImageRGBFilter.h"
 
-const int WIDTH = 640;
-const int HEIGHT = 480 ;
 
 static const float cubes[] = {
             -1.0f, -1.0f,
@@ -74,16 +73,17 @@ static float mykernel[] = {
             0.25f,0.5f,0.25f
 };
 
-class Scene
+class Scene : public IScene
 {
 public:
     Scene();
     ~Scene();
-    void init();
-    void update();
-    void draw();
+    virtual void init(ESContext*);
+    virtual void update(ESContext*, float);
+    virtual void draw(ESContext*);
+    virtual void key(ESContext*);
 private:
-    std::shared_ptr<GPUImageBrightnessFilter> filter;
+    std::shared_ptr<GPUImageRGBFilter> filter;
     GLuint textureId;
 } ;
 
@@ -100,7 +100,11 @@ Scene::Scene()
 
     {
         //filter = std::make_shared<GPUImageBrightnessFilter>(0.5f);
-        filter = std::make_shared<GPUImageBrightnessFilter>(-0.5f);
+        //filter = std::make_shared<GPUImageBrightnessFilter>(-0.5f);
+    }
+
+    {
+        filter = std::make_shared<GPUImageRGBFilter>(0.0f,1.0f,0.0f);
     }
 }
 
@@ -111,7 +115,7 @@ Scene::~Scene()
 }
 
 
-void Scene::init()
+void Scene::init(ESContext* context)
 {
 
     //onSurfaceCreated
@@ -129,13 +133,13 @@ void Scene::init()
 
     //onSurfaceChanged
     //设置视口的大小及位置 
-    glViewport(0, 0, WIDTH, HEIGHT);
+    glViewport(0, 0, context->width, context->height);
     glUseProgram(filter->getProgram());
-    filter->onOutputSizeChanged(WIDTH, HEIGHT);
+    filter->onOutputSizeChanged(context->width, context->height);
     ShaderUtil::checkGlError("init --3");
 }
 
-void Scene::draw()
+void Scene::draw(ESContext*)
 {
     ShaderUtil::checkGlError("draw ++");
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -143,57 +147,19 @@ void Scene::draw()
     filter->onDraw(textureId, cubes, textureCoords);
 }
 
-void Scene::update()
+void Scene::update(ESContext*,float)
 {
 
 }
-///
-// Initialize the shader and program object
-//
-bool Init ( ESContext *esContext )
-{
-   Scene *scene = (Scene *)esContext->userData;
-   scene->init();
-   return true;
-}
 
-///
-// Draw a triangle using the shader pair created in Init()
-//
-void Draw ( ESContext *esContext )
+void Scene::key(ESContext*)
 {
-   Scene *scene = (Scene *)esContext->userData;
-   scene->draw();
-}
 
-void Update(ESContext *esContext, float)
-{
-    Scene *scene = (Scene *)esContext->userData;
-    scene->update();
-}
-
-void Shutdown ( ESContext *esContext )
-{
-    Scene *scene = (Scene *)esContext->userData;
-
-   //delete userData->star;
-   delete scene;
-   esContext->userData = nullptr;
 }
 
 
-extern "C" int esMain ( ESContext *esContext )
+
+IScene* createScene()
 {
-   esCreateWindow ( esContext, "android gpuimage cpp", WIDTH, HEIGHT, ES_WINDOW_RGB );
-
-   esContext->userData = new Scene();
-   if ( !Init ( esContext ) )
-   {
-      return GL_FALSE;
-   }
-
-   esRegisterShutdownFunc ( esContext, Shutdown );
-   esRegisterDrawFunc ( esContext, Draw );
-   esRegisterUpdateFunc(esContext, Update);
-   return GL_TRUE;
+    return new Scene();
 }

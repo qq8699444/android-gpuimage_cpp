@@ -4,6 +4,7 @@ using namespace  std;
 #include "Runnable.h"
 #include "ShaderUtil.h"
 
+
 Runnable1i::Runnable1i(int location, int intValue)
 {
     this->location = location;

@@ -56,7 +56,7 @@ public:
         return glUniformTexture;
     }
 
-
+    
 protected:
 
     static string NO_FILTER_VERTEX_SHADER;
@@ -78,6 +78,8 @@ protected:
     void setUniformMatrix3f(int location, float* matrix);
     void setUniformMatrix4f(int location, float* matrix);
     void appendRunOnDraw(IRunnable* r);
+
+    void checkGLError(const std::string& op);
 private:
     std::mutex  runOnDrawLock;
     std::list<IRunnable*> runOnDraw;

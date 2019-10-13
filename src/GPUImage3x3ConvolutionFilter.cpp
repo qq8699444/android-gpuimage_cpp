@@ -76,7 +76,7 @@ void GPUImage3x3ConvolutionFilter::onInit()
 {
     GPUImage3x3TextureSamplingFilter::onInit();
     uniformConvolutionMatrix = glGetUniformLocation(getProgram(), "convolutionMatrix");
-    ShaderUtil::checkGlError("glGetUniformLocation 3x3 kernel");
+    checkGLError("glGetUniformLocation 3x3 kernel");
 }
 
 

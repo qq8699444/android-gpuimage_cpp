@@ -44,13 +44,13 @@ void GPUImageTwoInputFilter::onInit()
     GPUImageFilter::onInit();
 
     filterSecondTextureCoordinateAttribute = glGetAttribLocation(getProgram(), "inputTextureCoordinate2");
-    ShaderUtil::checkGlError("glGetAttribLocation inputTextureCoordinate2");
+    checkGLError("glGetAttribLocation inputTextureCoordinate2");
 
     filterInputTextureUniform2 = glGetUniformLocation(getProgram(), "inputImageTexture2"); // This does assume a name of "inputImageTexture2" for second input texture in the fragment shader
-    ShaderUtil::checkGlError("glGetUniformLocation inputImageTexture2");
+    checkGLError("glGetUniformLocation inputImageTexture2");
 
     glEnableVertexAttribArray(filterSecondTextureCoordinateAttribute);
-    ShaderUtil::checkGlError("glEnableVertexAttribArray filterSecondTextureCoordinateAttribute");
+    checkGLError("glEnableVertexAttribArray filterSecondTextureCoordinateAttribute");
 }
 
 void GPUImageTwoInputFilter::onInitialized()
@@ -79,16 +79,16 @@ void GPUImageTwoInputFilter::onDestroy()
 void GPUImageTwoInputFilter::onDrawArraysPre()
 {
     glEnableVertexAttribArray(filterSecondTextureCoordinateAttribute);
-    ShaderUtil::checkGlError("glEnableVertexAttribArray filterSecondTextureCoordinateAttribute");
+    checkGLError("glEnableVertexAttribArray filterSecondTextureCoordinateAttribute");
 
     glActiveTexture(GL_TEXTURE3);
-    ShaderUtil::checkGlError("glActiveTexture GL_TEXTURE3");
+    checkGLError("glActiveTexture GL_TEXTURE3");
 
     glBindTexture(GL_TEXTURE_2D, filterSourceTexture2);
-    ShaderUtil::checkGlError("glBindTexture filterSourceTexture2");
+    checkGLError("glBindTexture filterSourceTexture2");
 
     glUniform1i(filterInputTextureUniform2, 3);
-    ShaderUtil::checkGlError("glUniform1i filterInputTextureUniform2");
+    checkGLError("glUniform1i filterInputTextureUniform2");
 
     //texture2CoordinatesBuffer.position(0);
     glVertexAttribPointer(filterSecondTextureCoordinateAttribute, 2, GL_FLOAT, false, 0, texture2CoordinatesBuffer);

@@ -73,9 +73,9 @@ void GPUImage3x3TextureSamplingFilter::onInit()
 {
     GPUImageFilter::onInit();
     uniformTexelWidthLocation = glGetUniformLocation(getProgram(), "texelWidth");
-    ShaderUtil::checkGlError("glGetUniformLocation texelWidth");
+    checkGLError("glGetUniformLocation texelWidth");
     uniformTexelHeightLocation = glGetUniformLocation(getProgram(), "texelHeight");
-    ShaderUtil::checkGlError("glGetUniformLocation texelHeight");
+    checkGLError("glGetUniformLocation texelHeight");
 }
 
 void GPUImage3x3TextureSamplingFilter::onInitialized()

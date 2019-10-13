@@ -70,9 +70,9 @@ LRESULT WINAPI ESWindowProc ( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
       {
          ESContext *esContext = ( ESContext * ) ( LONG_PTR ) GetWindowLongPtr ( hWnd, GWL_USERDATA );
 
-         if ( esContext && esContext->drawFunc )
+         //if ( esContext && esContext->drawFunc )
          {
-            esContext->drawFunc ( esContext );
+            esContext->scene->draw ( esContext );
             eglSwapBuffers ( esContext->eglDisplay, esContext->eglSurface );
          }
 
@@ -92,9 +92,9 @@ LRESULT WINAPI ESWindowProc ( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 
          GetCursorPos ( &point );
 
-         if ( esContext && esContext->keyFunc )
-            esContext->keyFunc ( esContext, ( unsigned char ) wParam,
-                                 ( int ) point.x, ( int ) point.y );
+         //if ( esContext && esContext->keyFunc )
+         //   esContext->keyFunc ( esContext, ( unsigned char ) wParam,
+         //                        ( int ) point.x, ( int ) point.y );
       }
       break;
 
@@ -218,9 +218,10 @@ void WinLoop ( ESContext *esContext )
       }
 
       // Call update function if registered
-      if ( esContext->updateFunc != NULL )
+      //if ( esContext->updateFunc != NULL )
       {
-         esContext->updateFunc ( esContext, deltaTime );
+         //esContext->updateFunc ( esContext, deltaTime );
+          esContext->scene->update(esContext, deltaTime);
       }
    }
 }
@@ -229,8 +230,24 @@ void WinLoop ( ESContext *esContext )
 //  Global extern.  The application must declare this function
 //  that runs the application.
 //
-extern int esMain ( ESContext *esContext );
+const int WIDTH = 640;
+const int HEIGHT = 480;
 
+extern IScene* createScene();
+
+int esMain(ESContext *esContext)
+{
+    esCreateWindow(esContext, "android gpuimage cpp", WIDTH, HEIGHT, ES_WINDOW_RGB);
+
+    esContext->scene = createScene();
+    esContext->scene->init(esContext);
+    
+
+    //esRegisterShutdownFunc(esContext, Shutdown);
+    //esRegisterDrawFunc(esContext, Draw);
+    //esRegisterUpdateFunc(esContext, Update);
+    return 0;
+}
 ///
 //  main()
 //
@@ -242,22 +259,16 @@ int main ( int argc, char *argv[] )
 
    memset ( &esContext, 0, sizeof ( ESContext ) );
 
-   if ( esMain ( &esContext ) != GL_TRUE )
+   if ( esMain ( &esContext ) != 0 )
    {
       return 1;
    }
 
    WinLoop ( &esContext );
 
-   if ( esContext.shutdownFunc != NULL )
-   {
-      esContext.shutdownFunc ( &esContext );
-   }
-
-   if ( esContext.userData != NULL )
-   {
-      free ( esContext.userData );
-   }
+   
+   delete   esContext.scene;
+   
 
    return 0;
 }

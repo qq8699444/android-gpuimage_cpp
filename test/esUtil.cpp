@@ -43,6 +43,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
+#include <string>
 #include "esUtil.h"
 #include "esUtil_win.h"
 
@@ -248,39 +249,6 @@ GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char *title, G
    return GL_TRUE;
 }
 
-///
-//  esRegisterDrawFunc()
-//
-void ESUTIL_API esRegisterDrawFunc ( ESContext *esContext, void ( ESCALLBACK *drawFunc ) ( ESContext * ) )
-{
-   esContext->drawFunc = drawFunc;
-}
-
-///
-//  esRegisterShutdownFunc()
-//
-void ESUTIL_API esRegisterShutdownFunc ( ESContext *esContext, void ( ESCALLBACK *shutdownFunc ) ( ESContext * ) )
-{
-   esContext->shutdownFunc = shutdownFunc;
-}
-
-///
-//  esRegisterUpdateFunc()
-//
-void ESUTIL_API esRegisterUpdateFunc ( ESContext *esContext, void ( ESCALLBACK *updateFunc ) ( ESContext *, float ) )
-{
-   esContext->updateFunc = updateFunc;
-}
-
-
-///
-//  esRegisterKeyFunc()
-//
-void ESUTIL_API esRegisterKeyFunc ( ESContext *esContext,
-                                    void ( ESCALLBACK *keyFunc ) ( ESContext *, unsigned char, int, int ) )
-{
-   esContext->keyFunc = keyFunc;
-}
 
 
 ///
@@ -422,12 +390,11 @@ char *ESUTIL_API esLoadTGA ( void *ioContext, const char *fileName, int *width, 
    return ( NULL );
 }
 
-void checkGLError(const char* op)
+void checkGLError(const std::string& op)
 {
     int error;
     while ((error = glGetError()) != GL_NO_ERROR)
     {
-        printf("ES30_ERROR %s: glError %d\n" , op,error );
-        //throw new RuntimeException(op + ": glError " + error);
+        printf("%s: glError %d\n", op.c_str(), error);
     }
 }

@@ -8,7 +8,8 @@ set ( filter_src
 		GPUImage3x3TextureSamplingFilter.cpp
 		GPUImage3x3ConvolutionFilter.cpp
 		GPUImageTwoInputFilter.cpp
-		GPUImageBrightnessFilter.cpp)
+		GPUImageBrightnessFilter.cpp
+		GPUImageRGBFilter.cpp)
 
 
 # Win32 Platform files

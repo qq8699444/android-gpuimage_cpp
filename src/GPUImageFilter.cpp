@@ -57,13 +57,13 @@ void GPUImageFilter::onInit()
     glProgId = ShaderUtil::createProgram(vertexShader, fragmentShader);
 
     glAttribPosition = glGetAttribLocation(glProgId, "position");
-    ShaderUtil::checkGlError("glGetAttribLocation postion");
+    checkGLError("glGetAttribLocation postion");
 
     glUniformTexture = glGetUniformLocation(glProgId, "inputImageTexture");
-    ShaderUtil::checkGlError("glGetUniformLocation inputImageTexture");
+    checkGLError("glGetUniformLocation inputImageTexture");
 
     glAttribTextureCoordinate = glGetAttribLocation(glProgId, "inputTextureCoordinate");
-    ShaderUtil::checkGlError("glGetAttribLocation inputTextureCoordinate");
+    checkGLError("glGetAttribLocation inputTextureCoordinate");
 
     bInitialized = true;
 }
@@ -98,7 +98,7 @@ void GPUImageFilter::onOutputSizeChanged(int width, int height)
 void GPUImageFilter::onDraw(int textureId, const GLfloat* cubeBuffer, const GLfloat* textureBuffer)
 {
     glUseProgram(glProgId);
-    ShaderUtil::checkGlError("glUseProgram");
+    checkGLError("glUseProgram");
 
     runPendingOnDrawTasks();
     if (!bInitialized) {
@@ -107,25 +107,25 @@ void GPUImageFilter::onDraw(int textureId, const GLfloat* cubeBuffer, const GLfl
 
     //cubeBuffer.position(0);
     glVertexAttribPointer(glAttribPosition, 2, GL_FLOAT, false, 0, cubeBuffer);
-    ShaderUtil::checkGlError("glVertexAttribPointer postion");
+    checkGLError("glVertexAttribPointer postion");
     glEnableVertexAttribArray(glAttribPosition);
-    ShaderUtil::checkGlError("glEnableVertexAttribArray postion");
+    checkGLError("glEnableVertexAttribArray postion");
 
     //textureBuffer.position(0);
     glVertexAttribPointer(glAttribTextureCoordinate, 2, GL_FLOAT, false, 0, textureBuffer);
     glEnableVertexAttribArray(glAttribTextureCoordinate);
-    ShaderUtil::checkGlError("texture");
+    checkGLError("texture");
     
     if (textureId != -1) {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, textureId);
         glUniform1i(glUniformTexture, 0);
-        ShaderUtil::checkGlError("texture2");
+        checkGLError("texture2");
     }
     onDrawArraysPre();
 
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    ShaderUtil::checkGlError("glDrawArrays");
+    checkGLError("glDrawArrays");
 
 
     glDisableVertexAttribArray(glAttribPosition);
@@ -245,4 +245,13 @@ void GPUImageFilter::appendRunOnDraw(IRunnable* r)
 {
     std::lock_guard<std::mutex> l(runOnDrawLock);
     runOnDraw.push_back(r);
+}
+
+void GPUImageFilter::checkGLError(const std::string& op)
+{
+    int error;
+    while ((error = glGetError()) != GL_NO_ERROR)
+    {
+        printf("%s: glError %d\n", op.c_str(), error);
+    }
 }
