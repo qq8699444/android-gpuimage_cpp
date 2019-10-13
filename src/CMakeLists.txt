@@ -1,11 +1,14 @@
 set ( filter_src 
 		ShaderUtil.cpp
+		TextureRotationUtil.cpp
 		GPUImageFilter.cpp
 		GPUImageGrayscaleFilter.cpp
 		Runnable.cpp
 		GPUImageOpacityFilter.cpp
 		GPUImage3x3TextureSamplingFilter.cpp
-		GPUImage3x3ConvolutionFilter.cpp)
+		GPUImage3x3ConvolutionFilter.cpp
+		GPUImageTwoInputFilter.cpp
+		GPUImageBrightnessFilter.cpp)
 
 
 # Win32 Platform files

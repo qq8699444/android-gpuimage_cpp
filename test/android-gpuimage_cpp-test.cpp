@@ -49,6 +49,7 @@ using namespace std;
 #include "GPUImageGrayscaleFilter.h"
 #include "GPUImageOpacityFilter.h"
 #include "GPUImage3x3ConvolutionFilter.h"
+#include "GPUImageBrightnessFilter.h"
 
 const int WIDTH = 640;
 const int HEIGHT = 480 ;
@@ -82,8 +83,8 @@ public:
     void update();
     void draw();
 private:
-    std::shared_ptr<GPUImage3x3ConvolutionFilter> filter;
-    int textureId;
+    std::shared_ptr<GPUImageBrightnessFilter> filter;
+    GLuint textureId;
 } ;
 
 Scene::Scene()
@@ -94,17 +95,19 @@ Scene::Scene()
     }
 
     {
-        
+        //filter = std::make_shared<GPUImage3x3ConvolutionFilter>(mykernel);
+    }
 
-        auto f = std::make_shared<GPUImage3x3ConvolutionFilter>(mykernel);
-        
-        filter = f;
+    {
+        //filter = std::make_shared<GPUImageBrightnessFilter>(0.5f);
+        filter = std::make_shared<GPUImageBrightnessFilter>(-0.5f);
     }
 }
 
 Scene::~Scene()
 {
     filter.reset();
+    glDeleteTextures(1, &textureId);
 }
 
 
@@ -115,8 +118,8 @@ void Scene::init()
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
     filter->ifNeedInit();
-    filter->setTexelWidth(1.0f / 512);
-    filter->setTexelHeight(1.0f / 512);
+    //filter->setTexelWidth(1.0f / 512);
+    //filter->setTexelHeight(1.0f / 512);
 
     ShaderUtil::checkGlError("init --1");
     //打开深度检测
