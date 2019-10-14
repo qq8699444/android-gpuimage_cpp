@@ -9,7 +9,10 @@ set ( filter_src
 		GPUImage3x3ConvolutionFilter.cpp
 		GPUImageTwoInputFilter.cpp
 		GPUImageBrightnessFilter.cpp
-		GPUImageRGBFilter.cpp)
+		GPUImageRGBFilter.cpp
+		GPUImagePosterizeFilter.cpp
+		GPUImagePixelationFilter.cpp
+		GPUImageBilateralBlurFilter.cpp)
 
 
 # Win32 Platform files

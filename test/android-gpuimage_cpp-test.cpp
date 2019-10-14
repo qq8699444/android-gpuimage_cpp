@@ -51,6 +51,9 @@ using namespace std;
 #include "GPUImage3x3ConvolutionFilter.h"
 #include "GPUImageBrightnessFilter.h"
 #include "GPUImageRGBFilter.h"
+#include "GPUImagePosterizeFilter.h"
+#include "GPUImagePixelationFilter.h"
+#include "GPUImageBilateralBlurFilter.h"
 
 
 static const float cubes[] = {
@@ -83,7 +86,7 @@ public:
     virtual void draw(ESContext*);
     virtual void key(ESContext*);
 private:
-    std::shared_ptr<GPUImageRGBFilter> filter;
+    std::shared_ptr<GPUImageBilateralBlurFilter> filter;
     GLuint textureId;
 } ;
 
@@ -104,7 +107,21 @@ Scene::Scene()
     }
 
     {
-        filter = std::make_shared<GPUImageRGBFilter>(0.0f,1.0f,0.0f);
+        //filter = std::make_shared<GPUImageRGBFilter>(0.0f,1.0f,0.0f);
+    }
+
+    {
+        //filter = std::make_shared<GPUImagePosterizeFilter>(3);
+    }
+    {
+        //filter = std::make_shared<GPUImagePosterizeFilter>(3); 
+    }
+
+    {
+        //filter = std::make_shared<GPUImagePixelationFilter>(); 
+    }
+    {
+        filter = std::make_shared<GPUImageBilateralBlurFilter>();
     }
 }
 
@@ -113,7 +130,6 @@ Scene::~Scene()
     filter.reset();
     glDeleteTextures(1, &textureId);
 }
-
 
 void Scene::init(ESContext* context)
 {
