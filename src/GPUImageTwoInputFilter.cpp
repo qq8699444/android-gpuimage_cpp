@@ -3,6 +3,8 @@
 using namespace  std;
 #include "ShaderUtil.h"
 #include "GPUImageTwoInputFilter.h"
+#include "textureUtil.h"
+
 
 string GPUImageTwoInputFilter::VERTEX_SHADER = "attribute vec4 position;\n" 
             "attribute vec4 inputTextureCoordinate;\n" 
@@ -65,7 +67,18 @@ void GPUImageTwoInputFilter::onInitialized()
 void GPUImageTwoInputFilter::setBitmap(string& bitmap)
 {
     this->bitmap = bitmap;
-
+    auto r = [this] {
+        if (this->filterSourceTexture2 == -1)
+        {
+            if (this->bitmap != "")
+            {
+                glActiveTexture(GL_TEXTURE3);
+                checkGLError("glActiveTexture GL_TEXTURE3");
+                filterSourceTexture2 = TextureUtil::load(this->bitmap);
+            }
+        }
+    };
+    appendRunOnDraw(new Runnable(r));
 
 }
 

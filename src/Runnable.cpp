@@ -120,3 +120,14 @@ void RunnableMatrix4f::run()
     glUniformMatrix4fv(loc, 1, false, matrix);
     ShaderUtil::checkGlError("glUniformMatrix4fv");
 }
+
+
+Runnable::Runnable(std::function<void()> f):
+    func(f)
+{
+}
+
+void Runnable::run()
+{
+    func();
+}

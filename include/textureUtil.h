@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <vector>
 #include <atlimage.h>
-#include "esUtil.h"
+//#include "esUtil.h"
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 
@@ -275,7 +275,7 @@ public:
                 GL_UNSIGNED_BYTE,
                 data 			  //ÎÆÀíÍ¼Ïñ
             );
-            checkGLError("glTexImage3D");
+            //checkGLError("glTexImage3D");
             
             delete[] data;
             return textureId;

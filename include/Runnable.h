@@ -9,6 +9,7 @@
 #include <EGL/eglext.h>
 #endif
 
+#include <functional>
 
 class IRunnable
 {
@@ -121,5 +122,18 @@ private:
     int loc;
     float* matrix;
 };
+
+
+class Runnable : public IRunnable
+{
+public:
+    Runnable() = delete;
+    Runnable(std::function<void()>);
+    
+    virtual void run();
+private:
+    std::function<void()>  func;
+};
+
 
 #endif
