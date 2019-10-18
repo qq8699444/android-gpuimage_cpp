@@ -20,7 +20,7 @@ class GPUImageFilter
 {
 public:
     GPUImageFilter(); 
-    GPUImageFilter(string vertexShader, string fragmentShader); 
+    GPUImageFilter(string& vertexShader, string& fragmentShader); 
     virtual ~GPUImageFilter();
     void init();
     void ifNeedInit();

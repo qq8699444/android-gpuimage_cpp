@@ -34,7 +34,7 @@ GPUImageFilter::GPUImageFilter():
 
 }
 
-GPUImageFilter::GPUImageFilter(string vertexShader, string fragmentShader)
+GPUImageFilter::GPUImageFilter(string& vertexShader, string& fragmentShader)
 {
     //runOnDraw = new LinkedList<>();
     this->vertexShader = vertexShader;

@@ -13,7 +13,11 @@ set ( filter_src
 		GPUImagePosterizeFilter.cpp
 		GPUImagePixelationFilter.cpp
 		GPUImageBilateralBlurFilter.cpp
-		GPUImageOverlayBlendFilter.cpp)
+		GPUImageOverlayBlendFilter.cpp
+		GPUImageSaturationFilter.cpp
+		GPUImageContrastFilter.cpp
+		GPUImageWhiteBalanceFilter.cpp
+		GPUImageExposureFilter.cpp)
 
 
 # Win32 Platform files
