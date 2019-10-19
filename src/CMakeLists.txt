@@ -18,7 +18,10 @@ set ( filter_src
 		GPUImageContrastFilter.cpp
 		GPUImageWhiteBalanceFilter.cpp
 		GPUImageExposureFilter.cpp
-		GPUImageVignetteFilter.cpp)
+		GPUImageVignetteFilter.cpp
+		GPUImageMonochromeFilter.cpp
+		GPUImageHighlightShadowFilter.cpp
+		GPUImageHueFilter.cpp)
 
 
 # Win32 Platform files

@@ -59,6 +59,10 @@ using namespace std;
 #include "GPUImageWhiteBalanceFilter.h"
 #include "GPUImageExposureFilter.h"
 #include "GPUImageVignetteFilter.h"
+#include "GPUImageHueFilter.h"
+#include "GPUImageHighlightShadowFilter.h"
+#include "GPUImageMonochromeFilter.h"
+
 
 static const float cubes[] = {
             -1.0f, -1.0f,
@@ -90,7 +94,7 @@ public:
     virtual void draw(ESContext*);
     virtual void key(ESContext*);
 private:
-    std::shared_ptr<GPUImageVignetteFilter> filter;
+    std::shared_ptr<GPUImageMonochromeFilter> filter;
     GLuint textureId;
 } ;
 
@@ -130,7 +134,10 @@ Scene::Scene()
         //filter = std::make_shared < GPUImageContrastFilter>(1.5f);// 0.5f,1.0f,1.5f
         //filter = std::make_shared < GPUImageWhiteBalanceFilter>(8000.f,80.f);
         //filter = std::make_shared<GPUImageExposureFilter>(0.5f);    //0.5f, 1.5f
-        filter = std::make_shared < GPUImageVignetteFilter>();
+        //filter = std::make_shared < GPUImageVignetteFilter>();
+        //filter = std::make_shared < GPUImageHueFilter>(270);  //90,270
+        //filter = std::make_shared < GPUImageHighlightShadowFilter>(0.9f,0.1f);
+        filter = std::make_shared < GPUImageMonochromeFilter>();
     }
 }
 
