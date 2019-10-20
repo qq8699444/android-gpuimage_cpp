@@ -55,6 +55,7 @@ using namespace std;
 #include "GPUImagePixelationFilter.h"
 #include "GPUImageBilateralBlurFilter.h"
 #include "GPUImageOverlayBlendFilter.h"
+#include "GPUImageChromaKeyBlendFilter.h"
 
 
 static const float cubes[] = {
@@ -87,7 +88,7 @@ public:
     virtual void draw(ESContext*);
     virtual void key(ESContext*);
 private:
-    std::shared_ptr<GPUImageOverlayBlendFilter> filter;
+    std::shared_ptr<GPUImageChromaKeyBlendFilter> filter;
     GLuint textureId;
     string pnggile2;
 } ;
@@ -98,7 +99,8 @@ Scene::Scene()
     pnggile2 = "coffee.png";
     
     {
-        filter = std::make_shared<GPUImageOverlayBlendFilter>();
+        //filter = std::make_shared<GPUImageOverlayBlendFilter>();
+        filter = std::make_shared<GPUImageChromaKeyBlendFilter>();
     }
 }
 
