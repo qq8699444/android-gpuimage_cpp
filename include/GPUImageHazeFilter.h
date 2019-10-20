@@ -7,17 +7,21 @@
 class GPUImageHazeFilter : public GPUImageFilter
 {
 public:
-    GPUImageHazeFilter();
-    GPUImageHazeFilter(float brightness);
+    GPUImageHazeFilter(float distance = 0.2f, float slope = 0.0f);
     ~GPUImageHazeFilter();
 
-    void setBrightness(float b);
+    void setDistance(float distance);
+    void setSlope(float distance);
 protected:
     virtual void onInit() override;
     virtual void onInitialized() override;
 private:
-    int brightnessLocation;
-    float brightness;
-    static string BRIGHTNESS_FRAGMENT_SHADER;
+    float distance;
+    int distanceLocation;
+    float slope;
+    int slopeLocation;
+
+
+    static string HAZE_FRAGMENT_SHADER;
 };
 #endif

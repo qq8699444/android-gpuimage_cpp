@@ -8,16 +8,13 @@ class GPUImageColorInvertFilter : public GPUImageFilter
 {
 public:
     GPUImageColorInvertFilter();
-    GPUImageColorInvertFilter(float brightness);
-    ~GPUImageColorInvertFilter();
+    ~GPUImageColorInvertFilter() = default;
 
-    void setBrightness(float b);
 protected:
-    virtual void onInit() override;
-    virtual void onInitialized() override;
+    //virtual void onInit() override;
+    //virtual void onInitialized() override;
 private:
-    int brightnessLocation;
-    float brightness;
-    static string BRIGHTNESS_FRAGMENT_SHADER;
+   
+    static string COLOR_INVERT_FRAGMENT_SHADER;
 };
 #endif

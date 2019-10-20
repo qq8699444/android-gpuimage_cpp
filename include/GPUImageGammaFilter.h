@@ -7,17 +7,17 @@
 class GPUImageGammaFilter : public GPUImageFilter
 {
 public:
-    GPUImageGammaFilter();
-    GPUImageGammaFilter(float brightness);
-    ~GPUImageGammaFilter();
+    GPUImageGammaFilter(float gamma= 1.2f);
+    ~GPUImageGammaFilter() = default;
 
-    void setBrightness(float b);
+    void setGamma(float b);
 protected:
     virtual void onInit() override;
     virtual void onInitialized() override;
 private:
-    int brightnessLocation;
-    float brightness;
-    static string BRIGHTNESS_FRAGMENT_SHADER;
+    int gammaLocation;
+    float gamma;
+
+    static string GAMMA_FRAGMENT_SHADER;
 };
 #endif

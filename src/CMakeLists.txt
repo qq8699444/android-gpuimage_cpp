@@ -21,7 +21,11 @@ set ( filter_src
 		GPUImageVignetteFilter.cpp
 		GPUImageMonochromeFilter.cpp
 		GPUImageHighlightShadowFilter.cpp
-		GPUImageHueFilter.cpp)
+		GPUImageHueFilter.cpp
+		GPUImageColorInvertFilter.cpp
+		GPUImageLevelsFilter.cpp
+		GPUImageGammaFilter.cpp
+		GPUImageHazeFilter.cpp)
 
 
 # Win32 Platform files
