@@ -68,6 +68,7 @@ using namespace std;
 #include "GPUImageLuminanceThresholdFilter.h"
 #include "GPUImageFalseColorFilter.h"
 #include "GPUImageSepiaToneFilter.h"
+#include "GPUImageSobelEdgeDetectionFilter.h"
 
 
 static const float cubes[] = {
@@ -100,7 +101,7 @@ public:
     virtual void draw(ESContext*);
     virtual void key(ESContext*);
 private:
-    std::shared_ptr<GPUImageSepiaToneFilter> filter;
+    std::shared_ptr<GPUImageSobelEdgeDetectionFilter> filter;
     GLuint textureId;
 } ;
 
@@ -149,7 +150,8 @@ Scene::Scene()
         //filter = std::make_shared <GPUImageGammaFilter>(0.5f);
         //filter = std::make_shared <GPUImageLuminanceThresholdFilter>(0.5f);
         //filter = std::make_shared <GPUImageFalseColorFilter>();
-        filter = std::make_shared <GPUImageSepiaToneFilter>();
+        //filter = std::make_shared <GPUImageSepiaToneFilter>();
+        filter = std::make_shared <GPUImageSobelEdgeDetectionFilter>();
     }
 }
 

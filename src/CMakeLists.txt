@@ -31,6 +31,9 @@ set ( filter_src
 		GPUImageChromaKeyBlendFilter.cpp
 		GPUImageColorMatrixFilter.cpp
 		GPUImageSepiaToneFilter.cpp
+		
+		GPUImageFilterGroup.cpp
+		GPUImageSobelEdgeDetectionFilter.cpp
 		)
 
 
